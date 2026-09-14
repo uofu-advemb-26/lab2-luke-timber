@@ -1,4 +1,4 @@
-# Renode setup
+# Renode setupp
 The Raspberry Pico needs configuration files for Renode to work properly.
 
 * On MacOS, the installation location is `/Applications/Renode.app/Contents/MacOs`
