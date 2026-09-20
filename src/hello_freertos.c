@@ -23,24 +23,6 @@ bool on = false;
 #define MAIN_TASK_STACK_SIZE configMINIMAL_STACK_SIZE
 #define BLINK_TASK_STACK_SIZE configMINIMAL_STACK_SIZE
 
-void blink(int *count, bool *on) {
-  if (*count >= 11) {
-    *count = 0;
-  } else {
-    *on = !(*on);
-    (*count)++;
-  }
-}
-
-char swapCase(char c) {
-  if (c <= 'z' && c >= 'a')
-    return (c - 32);
-  else if (c >= 'A' && c <= 'Z')
-    return (c + 32);
-  else
-    return (c);
-}
-
 void blink_task(__unused void *params) {
   hard_assert(cyw43_arch_init() == PICO_OK);
   while (true) {
