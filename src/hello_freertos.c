@@ -13,6 +13,8 @@
 #include "pico/multicore.h"
 #include "pico/cyw43_arch.h"
 
+#include "testHarness.h"
+
 int count = 0;
 bool on = false;
 
@@ -21,13 +23,30 @@ bool on = false;
 #define MAIN_TASK_STACK_SIZE configMINIMAL_STACK_SIZE
 #define BLINK_TASK_STACK_SIZE configMINIMAL_STACK_SIZE
 
+void blink(int *count, bool *on) {
+  if (*count >= 11) {
+    *count = 0;
+  } else {
+    *on = !(*on);
+    (*count)++;
+  }
+}
+
+char swapCase(char c) {
+  if (c <= 'z' && c >= 'a')
+    return (c - 32);
+  else if (c >= 'A' && c <= 'Z')
+    return (c + 32);
+  else
+    return (c);
+}
+
 void blink_task(__unused void *params) {
   hard_assert(cyw43_arch_init() == PICO_OK);
   while (true) {
+    blink(&count, &on);
     cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN, on);
-    if (count++ % 11)
-      on = !on;
-    vTaskDelay(500);
+    vTaskDelay(50);
   }
 }
 
@@ -36,12 +55,7 @@ void main_task(__unused void *params) {
               BLINK_TASK_PRIORITY, NULL);
   char c;
   while (c = getchar()) {
-    if (c <= 'z' && c >= 'a')
-      putchar(c - 32);
-    else if (c >= 'A' && c <= 'Z')
-      putchar(c + 32);
-    else
-      putchar(c);
+    putchar(swapCase(c));
   }
 }
 
