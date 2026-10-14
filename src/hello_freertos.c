@@ -37,6 +37,9 @@ void main_task(__unused void *params) {
     xTaskCreate(blink_task, "BlinkThread",
                 BLINK_TASK_STACK_SIZE, NULL, BLINK_TASK_PRIORITY, NULL);
     char c;
+    // While there is a char from the standard input, if the char is lowercase
+    // print it as uppercase, if the char is uppercase print it as lowercase.
+    // If it is not a standard char then just print the same char back out.
     while(c = getchar()) {
         if (c <= 'z' && c >= 'a') putchar(c - 32);
         else if (c >= 'A' && c <= 'Z') putchar(c + 32);
