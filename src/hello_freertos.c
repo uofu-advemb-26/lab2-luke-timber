@@ -25,12 +25,15 @@ void blink_task(__unused void *params) {
     hard_assert(cyw43_arch_init() == PICO_OK);
     while (true) {
         cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN, on);
+        // Evaluates the current value of count with the modulo, then increments count afterward.
+        // If count is anything but a multiple of 11 then this evaluates to true.  Multiples of 11 (0, 11, 22, 33, ...) evaluate to false.
         if (count++ % 11) on = !on;
         vTaskDelay(500);
     }
 }
 
 void main_task(__unused void *params) {
+    // Create a side task "blink"
     xTaskCreate(blink_task, "BlinkThread",
                 BLINK_TASK_STACK_SIZE, NULL, BLINK_TASK_PRIORITY, NULL);
     char c;
@@ -47,6 +50,7 @@ int main( void )
     const char *rtos_name;
     rtos_name = "FreeRTOS";
     TaskHandle_t task;
+    // Create the main task and start the task scheduler.
     xTaskCreate(main_task, "MainThread",
                 MAIN_TASK_STACK_SIZE, NULL, MAIN_TASK_PRIORITY, &task);
     vTaskStartScheduler();
