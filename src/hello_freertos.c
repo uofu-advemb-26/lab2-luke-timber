@@ -26,7 +26,9 @@ bool on = false;
 void blink_task(__unused void *params) {
     hard_assert(cyw43_arch_init() == PICO_OK);
     while (true) {
+        cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN, on);
         insideBlinkLoop(&count, &on);
+        vTaskDelay(500);
         // cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN, on);
         // // Evaluates the current value of count with the modulo, then increments count afterward.
         // // If count is anything but a multiple of 11 then this evaluates to true.  Multiples of 11 (0, 11, 22, 33, ...) evaluate to false.

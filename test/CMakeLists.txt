@@ -1,4 +1,5 @@
 add_executable(mytest test.c unity_config.c)
+add_executable(newtest newTest.c unity_config.c)
 
 target_link_libraries(mytest PRIVATE
   pico_stdlib
@@ -7,10 +8,25 @@ target_link_libraries(mytest PRIVATE
   unity
 )
 
+target_sources(newtest PRIVATE
+    ../src/newC.c
+)
+
+target_link_libraries(newtest PRIVATE
+    pico_stdlib
+    pico_async_context_freertos
+    FreeRTOS-Kernel-Heap4
+    unity
+)
+
 # The CYW43 is the Wifi/Bluetooth module. If the board is set to pico_w, this
 # variable will be set and the wireless libraries added.
 if(PICO_CYW43_SUPPORTED)
     target_link_libraries(mytest PRIVATE
+        pico_cyw43_arch_none
+    )
+
+    target_link_libraries(newtest PRIVATE
         pico_cyw43_arch_none
     )
 endif()
@@ -19,6 +35,9 @@ endif()
 # These are mutually exclusive, only set one.
 pico_enable_stdio_uart(mytest 0)
 pico_enable_stdio_usb(mytest 1)
+
+pico_enable_stdio_uart(newtest 0)
+pico_enable_stdio_usb(newtest 1)
 
 # This will speed up the simulation, since data won't be copied from the flash controller.
 # It does make the binary non-persistent on a real microcontroller.
